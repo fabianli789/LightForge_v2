@@ -1,0 +1,2 @@
+recursive-include * nomad_plugin.yaml
+graft src/lightforge_v2/example_uploads
