@@ -10,16 +10,28 @@ if TYPE_CHECKING:
         BoundLogger,
     )
 
+import numpy as np
 from nomad.config import config
 from nomad.datamodel.data import Schema
 from nomad.datamodel.metainfo.annotations import ELNAnnotation, ELNComponentEnum
-from nomad.metainfo import Quantity, SchemaPackage
+
+from nomad.metainfo import Quantity, SchemaPackage, Section, MSection, SubSection   # changed
+from runschema.calculation import Calculation 
 
 configuration = config.get_plugin_entry_point(
     'lightforge_v2.schema_packages:schema_package_entry_point'
 )
 
 m_package = SchemaPackage()
+
+
+class Currents(MSection):
+    m_def = Section(Validate=False)
+    current_density = Quantity(type=np.float64)
+
+class LightforgeCalculation(Calculation):
+    m_def = Section(validate=False)
+    currents = SubSection(sub_section=Currents.m_def, repeats=False)
 
 
 class NewSchemaPackage(Schema):

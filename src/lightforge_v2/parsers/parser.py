@@ -14,11 +14,16 @@ from nomad.config import config
 from nomad.datamodel.metainfo.workflow import Workflow
 from nomad.parsing.parser import MatchingParser
 
-#from nomad.datamodel.metainfo.simulation.run import Run                        # no import error but error at sec_run = archive.m_create(Run)
+#from nomad.datamodel.metainfo.simulation.run import Run                        
 #from nomad.datamodel.metainfo.simulation.calculation import Calculation
 
-#from runschema.run import Run, Program                                         # import error: no module named 'runschema'
-#from nomad_simulations.schema_packages.general import Program, Simulation      # import error: no module 'nomad_simulations'
+from runschema.run import Run, Program                                         
+from runschema.calculation import Calculation
+#from nomad_simulations.schema_packages.general import Program, Simulation
+
+#from lightforge_v2.schema_packages.schema_package import NewSchemaPackage
+from lightforge_v2.schema_packages.schema_package import Currents
+
 
 configuration = config.get_plugin_entry_point(
     'lightforge_v2.parsers:parser_entry_point'
@@ -36,9 +41,12 @@ class NewParser(MatchingParser):
         logger.info('NewParser.parse', parameter=configuration.parameter)
 
         archive.workflow2 = Workflow(name='test')
-#        sec_program = archive.m_setdefault('run.program')
-#        sec_program.name = "Lightforge test test"
+        sec_program = archive.m_setdefault('run.program')
+        sec_program.name = "Lightforge test test"
     
-#        sec_run = archive.m_create(Run)
-#        sec_calc = Calculation()
-#        sec_calc.pressure = 5
+        sec_run = archive.m_create(Run)
+        sec_calc = sec_run.m_create(Calculation)
+        sec_calc.pressure = 5
+#        sec_new = sec_calc.m_create(NewSchemaPackage)
+        sec_currents = sec_calc.m_create(Currents)
+#        sec_currents.current_density = 6
