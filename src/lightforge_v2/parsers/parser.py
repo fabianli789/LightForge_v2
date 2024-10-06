@@ -43,11 +43,17 @@ class NewParser(MatchingParser):
         archive.workflow2 = Workflow(name='test')
         sec_program = archive.m_setdefault('run.program')
         sec_program.name = "Lightforge test test"
-    
-           
-        sec_run = archive.m_create(Run)
-        sec_calc = sec_run.m_create(LightforgeCalculation) 
-        sec_currents = sec_calc.m_create(Currents)
+              
+#        sec_run = archive.m_create(Run)
+#        sec_calc = sec_run.m_create(LightforgeCalculation) 
+#        sec_currents = sec_calc.m_create(Currents)
 
 #        sec_currents.current_density = 6
 #        sec_calc.pressure = 5
+
+        run = Run()
+        archive.run.append(run)
+        currents = Currents()
+        currents.current_density = 9
+        calculation = LightforgeCalculation(currents=currents)
+        
