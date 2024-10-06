@@ -22,7 +22,7 @@ from runschema.calculation import Calculation
 #from nomad_simulations.schema_packages.general import Program, Simulation
 
 #from lightforge_v2.schema_packages.schema_package import NewSchemaPackage
-from lightforge_v2.schema_packages.schema_package import Currents
+from lightforge_v2.schema_packages.schema_package import Currents, LightforgeCalculation, LightforgeRun
 
 
 configuration = config.get_plugin_entry_point(
@@ -44,9 +44,10 @@ class NewParser(MatchingParser):
         sec_program = archive.m_setdefault('run.program')
         sec_program.name = "Lightforge test test"
     
+           
         sec_run = archive.m_create(Run)
-        sec_calc = sec_run.m_create(Calculation)
-        sec_calc.pressure = 5
-#        sec_new = sec_calc.m_create(NewSchemaPackage)
+        sec_calc = sec_run.m_create(LightforgeCalculation) 
         sec_currents = sec_calc.m_create(Currents)
+
 #        sec_currents.current_density = 6
+#        sec_calc.pressure = 5
