@@ -54,6 +54,7 @@ class NewParser(MatchingParser):
         run = Run()
         archive.run.append(run)
         currents = Currents()
-        currents.current_density = 9
-        calculation = LightforgeCalculation(currents=currents)
         
+        calculation = LightforgeCalculation(currents=currents)
+        currents.current_density = 9
+        run.calculation.append(calculation)
