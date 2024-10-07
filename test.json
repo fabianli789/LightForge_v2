@@ -1,0 +1,139 @@
+{
+  "run": [
+    {
+      "program": {
+        "name": "Lightforge test test"
+      }
+    },
+    {}
+  ],
+  "workflow2": {
+    "name": "test"
+  },
+  "metadata": {
+    "entry_name": "Lightforge test test test simulation",
+    "entry_type": "Lightforge test test test",
+    "mainfile": "/home/fabian/Documents/nomad/src_parser/LightForge_v2/tests/data/example.out",
+    "text_search_contents": [],
+    "domain": "dft",
+    "n_quantities": 19,
+    "quantities": [
+      "",
+      "metadata",
+      "metadata.domain",
+      "metadata.entry_name",
+      "metadata.entry_type",
+      "metadata.mainfile",
+      "metadata.quantities",
+      "metadata.section_defs",
+      "metadata.section_defs.definition_id",
+      "metadata.section_defs.definition_qualified_name",
+      "metadata.section_defs.used_directly",
+      "metadata.sections",
+      "results",
+      "results.material",
+      "results.method",
+      "results.method.simulation",
+      "results.method.simulation.program_name",
+      "results.method.workflow_name",
+      "results.properties",
+      "results.properties.n_calculations",
+      "run",
+      "run.program",
+      "run.program.name",
+      "workflow2",
+      "workflow2.name"
+    ],
+    "sections": [
+      "nomad.datamodel.datamodel.EntryArchive",
+      "nomad.datamodel.datamodel.EntryMetadata",
+      "nomad.datamodel.metainfo.workflow.Workflow",
+      "nomad.datamodel.results.Material",
+      "nomad.datamodel.results.Method",
+      "nomad.datamodel.results.Properties",
+      "nomad.datamodel.results.Results",
+      "nomad.datamodel.results.Simulation",
+      "runschema.run.Program",
+      "runschema.run.Run"
+    ],
+    "section_defs": [
+      {
+        "definition_qualified_name": "nomad.datamodel.data.ArchiveSection",
+        "definition_id": "7047cbff9980abff17cce4b1b6b0d1c783505b7f",
+        "used_directly": true
+      },
+      {
+        "definition_qualified_name": "nomad.datamodel.data.EntryData",
+        "definition_id": "538f52fd8d52b29372066f878319c6aeb03b74d2",
+        "used_directly": true
+      },
+      {
+        "definition_qualified_name": "nomad.datamodel.datamodel.EntryArchive",
+        "definition_id": "b587c0520dcb9f918362c4caafbd9c591980d260",
+        "used_directly": true
+      },
+      {
+        "definition_qualified_name": "nomad.datamodel.datamodel.EntryMetadata",
+        "definition_id": "6edfa503af63b84d6a6021c227d00137b4c1cc9c",
+        "used_directly": true
+      },
+      {
+        "definition_qualified_name": "nomad.datamodel.metainfo.workflow.Task",
+        "definition_id": "ac62fdff74f54fd477531446ca111c0dd9df6ba2",
+        "used_directly": true
+      },
+      {
+        "definition_qualified_name": "nomad.datamodel.metainfo.workflow.Workflow",
+        "definition_id": "fc65ae24157492e422afe61173a71403fc5e1fd7",
+        "used_directly": true
+      },
+      {
+        "definition_qualified_name": "nomad.datamodel.results.Material",
+        "definition_id": "f65d92c920055565f3da06d77840703e279e6ac3",
+        "used_directly": true
+      },
+      {
+        "definition_qualified_name": "nomad.datamodel.results.Method",
+        "definition_id": "be2ac1e5d1508e68e9d9d4fcd2d940303718498b",
+        "used_directly": true
+      },
+      {
+        "definition_qualified_name": "nomad.datamodel.results.Properties",
+        "definition_id": "6fb112524bb10f9ac23e8d162e4d7ad2e5862be3",
+        "used_directly": true
+      },
+      {
+        "definition_qualified_name": "nomad.datamodel.results.Results",
+        "definition_id": "72fc7fdff28b055cec563fb9df2cadc21b225fc0",
+        "used_directly": true
+      },
+      {
+        "definition_qualified_name": "nomad.datamodel.results.Simulation",
+        "definition_id": "031608ad8f3151ba8e61db938b0f79b054025888",
+        "used_directly": true
+      },
+      {
+        "definition_qualified_name": "runschema.run.Program",
+        "definition_id": "f7e6f96f5243e129211a57832268dd05fa14d059",
+        "used_directly": true
+      },
+      {
+        "definition_qualified_name": "runschema.run.Run",
+        "definition_id": "6c1f148ae3d9ada77e1e3ced3df8faa0a80b78d4",
+        "used_directly": true
+      }
+    ]
+  },
+  "results": {
+    "material": {},
+    "method": {
+      "workflow_name": "test",
+      "simulation": {
+        "program_name": "Lightforge test test"
+      }
+    },
+    "properties": {
+      "n_calculations": 0
+    }
+  }
+}
