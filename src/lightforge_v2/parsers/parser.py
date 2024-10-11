@@ -21,7 +21,7 @@ from runschema.run import Run, Program
 from runschema.calculation import Calculation
 #from nomad_simulations.schema_packages.general import Program, Simulation
 
-#from lightforge_v2.schema_packages.schema_package import NewSchemaPackage
+
 from lightforge_v2.schema_packages.schema_package import Currents, LightforgeCalculation, LightforgeRun
 
 
