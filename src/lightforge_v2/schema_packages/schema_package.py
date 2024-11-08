@@ -15,7 +15,7 @@ from nomad.config import config
 from nomad.datamodel.data import Schema
 from nomad.metainfo import Quantity, SchemaPackage, Section, MSection, SubSection
 from runschema.run import Run
-from runschema.calculation import Calculation 
+from runschema.calculation import Calculation
 
 configuration = config.get_plugin_entry_point(
     'lightforge_v2.schema_packages:schema_package_entry_point'
@@ -39,7 +39,7 @@ class Coordinates(MSection):
 
 class Device_data(MSection):
     m_def = Section(validate=False)
-    
+
     coordinates = SubSection(sub_section=Coordinates.m_def, repeats=True)
     mol_types = SubSection(sub_section=Mol_types.m_def, repeats=True)
     site_energies = SubSection(sub_section=Site_energies.m_def, repeats=True)
@@ -102,86 +102,86 @@ class Quenching_density_average(MSection):
     m_def = Section(validate=False)
     value = Quantity(type=np.float64, shape=[4, '*'], description="""1st row is device length in nm,
                                                                      2nd row is average number of quenched
-                                                                     excitons, 3rd row is average 
-                                                                     number of electrons, 4th row is 
+                                                                     excitons, 3rd row is average
+                                                                     number of electrons, 4th row is
                                                                      average number of holes.""")
 
 class Photon_creation_density_average(MSection):
     m_def = Section(validate=False)
-    value = Quantity(type=np.float64, shape=[3, '*'], description="""1st row is device length in nm, 
-                                                                    2nd row is average number of emitted photons, 
-                                                                    3rd row is average number of excitons created. 
-                                                                    1st repeating subsection corresponds to the 1st 
+    value = Quantity(type=np.float64, shape=[3, '*'], description="""1st row is device length in nm,
+                                                                    2nd row is average number of emitted photons,
+                                                                    3rd row is average number of excitons created.
+                                                                    1st repeating subsection corresponds to the 1st
                                                                     electric field applied etc.""")
 
 class Exciton_decay_density_average(MSection):
     m_def = Section(validate=False)
-    
+
     cs = Quantity(type=np.float64, shape=['*'], description='avg. number of charge separations.')
     eet = Quantity(type=np.float64, shape=['*'])
     ept = Quantity(type=np.float64, shape=['*'])
     ptq = Quantity(type=np.float64, shape=['*'], description='polaron-triplet quenching.')
     spq = Quantity(type=np.float64, shape=['*'], description='singlet-polaron quenching.')
-    ssa = Quantity(type=np.float64, shape=['*'], description='singlet-singlet annihilation')        
+    ssa = Quantity(type=np.float64, shape=['*'], description='singlet-singlet annihilation')
     sta = Quantity(type=np.float64, shape=['*'], description='singlet-triplet annihilation')
     tpq = Quantity(type=np.float64, shape=['*'], description='triplet-polaron quenching')
     tsa = Quantity(type=np.float64, shape=['*'], description='triplet-singlet annihilation')
     tta = Quantity(type=np.float64, shape=['*'], description='triplet-triplet annihilation')
     ttf = Quantity(type=np.float64, shape=['*'], description='triplet-triplet fusion')
     radiative = Quantity(type=np.float64, shape=['*'], description='avg. no. of radiatively decayed photons')
-    thermal = Quantity(type=np.float64, shape=['*'], description='thermal quenching')    
+    thermal = Quantity(type=np.float64, shape=['*'], description='thermal quenching')
     photon = Quantity(type=np.float64, shape=['*'], description='number of photons created')
     recombination = Quantity(type=np.float64, shape=['*'], description='avg. number of recombinations')
     exciton_decay_density_average_x_axis = Quantity(type=np.float64, shape=['*'], description='device length in nanometers.')
-    
+
 class Charge_density_average(MSection):
     m_def = Section(validate=False)
-    value = Quantity(type=np.float64, shape=[3, '*'], description="""1st row is device length in nm, 
-                                                                     2nd row is average number of electrons, 
-                                                                     3rd row is average number of holes. 
-                                                                     1st repeating subsection corresponds to 
+    value = Quantity(type=np.float64, shape=[3, '*'], description="""1st row is device length in nm,
+                                                                     2nd row is average number of electrons,
+                                                                     3rd row is average number of holes.
+                                                                     1st repeating subsection corresponds to
                                                                      the first electric field applied etc.""")
 
 class Mobility(MSection):
     m_def = Section(validate=False)
-    value = Quantity(type=np.float64, shape=['*'], description="""The number of (repeating) subsections of 
-                                                                  "mobility" corresponds to the number of 
-                                                                  applied electric fields, which are given 
-                                                                  in the "run.calculation.input" section, 
-                                                                  with subsection "0" being the first 
+    value = Quantity(type=np.float64, shape=['*'], description="""The number of (repeating) subsections of
+                                                                  "mobility" corresponds to the number of
+                                                                  applied electric fields, which are given
+                                                                  in the "run.calculation.input" section,
+                                                                  with subsection "0" being the first
                                                                   electric field.""")
-    mobilities_all_fields = Quantity(type=np.float64, shape=['*', 3], description="""1st column is 
-                                                                                     electric field^0.5 
-                                                                                     in (V/cm)^0.5, 2nd 
-                                                                                     column is mobility 
+    mobilities_all_fields = Quantity(type=np.float64, shape=['*', 3], description="""1st column is
+                                                                                     electric field^0.5
+                                                                                     in (V/cm)^0.5, 2nd
+                                                                                     column is mobility
                                                                                      in cm^2/(Vs).""")
 class IV(MSection):
     m_def =  Section(validate=False)
     name = Quantity(type=str)
-    iv_all_fields = Quantity(type=np.float64, shape=['*', 3], description="""Voltage (in Volts) over 
+    iv_all_fields = Quantity(type=np.float64, shape=['*', 3], description="""Voltage (in Volts) over
                                                                             current density (in mA/cm2).
-                                                                            1st column is voltage, 3rd 
+                                                                            1st column is voltage, 3rd
                                                                             column is current density.""")
     iv_all_fields_log  = Quantity(type=np.float64, shape=['*, 2'])
 class IQE2(MSection):
     m_def = Section(validate=False)
     name = Quantity(type=str)
-    iqe2_all_fields = Quantity(type=np.float64, shape=['*', 2], description="""1st column is voltage in 
+    iqe2_all_fields = Quantity(type=np.float64, shape=['*', 2], description="""1st column is voltage in
                                                                                Volts, 2nd column is IQE.""")
-    iqe2_all_currents = Quantity(type=np.float64, shape=['*',2], description="""1st column is current 
-                                                                                density in mA/cm2, 2nd 
-                                                                                column is the Internal 
+    iqe2_all_currents = Quantity(type=np.float64, shape=['*',2], description="""1st column is current
+                                                                                density in mA/cm2, 2nd
+                                                                                column is the Internal
                                                                                 Quantum Efficiency (IQE).
-                                                                                The current densities are 
+                                                                                The current densities are
                                                                                 a factor 10 too large.""")
 class Current_density(MSection):
     m_def = Section(validate=False)
-    value = Quantity(type=np.float64, shape=['*'],  description="""The number of (repeating) 
-                                                                   subsections of "current_density" 
-                                                                   corresponds to the number of applied 
-                                                                   electric fields, which are given in 
-                                                                   the "run.calculation.input" section, 
-                                                                   with subsection "0" being the first 
+    value = Quantity(type=np.float64, shape=['*'],  description="""The number of (repeating)
+                                                                   subsections of "current_density"
+                                                                   corresponds to the number of applied
+                                                                   electric fields, which are given in
+                                                                   the "run.calculation.input" section,
+                                                                   with subsection "0" being the first
                                                                    electric field.""")
 
 class Event_counts_by_type(Exciton_decay_density_average):
@@ -214,7 +214,7 @@ class Particle_densities(MSection):
     exciton_molpairs = SubSection(sub_section=Exciton_molpairs.m_def, repeats=False)
 class Current_characteristics(MSection):
     m_def = Section(validate=False)
-    current_density = SubSection(sub_section=Current_density.m_def, repeats=True)    
+    current_density = SubSection(sub_section=Current_density.m_def, repeats=True)
     IQE2 = SubSection(sub_section=IQE2.m_def, repeats=False)
     IV = SubSection(sub_section=IV.m_def, repeats=False)
     mobility = SubSection(sub_section=Mobility.m_def, repeats=True)
@@ -224,13 +224,13 @@ class Runtime_analysis(MSection):
     event_counts_by_type = SubSection(sub_section=Event_counts_by_type.m_def, repeats=True)
 
 class LF_experiments(MSection):
-    
+
     current_characteristics = SubSection(sub_section=Current_characteristics.m_def, repeats=False)
     particle_densities = SubSection(sub_section=Particle_densities.m_def, repeats=False)
     runtime_analysis = SubSection(sub_section=Runtime_analysis.m_def, repeats=False)
 class LF_material(MSection):
     m_def = Section(validate=False)
-    
+
     device_data = SubSection(sub_section=Device_data.m_def, repeats=False)
     electrodes = SubSection(sub_section=Electrodes.m_def, repeats=False)
     energy_levels = SubSection(sub_section=Energy_levels.m_def, repeats=False)
@@ -256,10 +256,10 @@ class Settings_dexter_transfer_integrals(MSection):
     dexter_transfer_integrals_maximum_ti = Quantity(type=np.float64)
 class Settings_pair_input(MSection):
     m_def = Section(validate=False)
-    
+
     molecule_1_type = Quantity(type=str)
     molecule_2_type = Quantity(type=str)
-    
+
     lf_qp_output = Quantity(type=str)
 
     settings_hole_transfer_integrals = SubSection(sub_section=Settings_hole_transfer_integrals.m_def, repeats=False)
@@ -267,23 +267,23 @@ class Settings_pair_input(MSection):
     settings_dexter_transfer_integrals = SubSection(sub_section=Settings_dexter_transfer_integrals.m_def, repeats=False)
 class Settings_materials(MSection):
     m_def = Section(validate=False)
-    
+
     material_name = Quantity(type=str, description='Name of the material in settings file')
-    input_mode_transport = Quantity(type=str, description='''QP = QuantumPatch, 
-                                                                        PAR = parametric, 
+    input_mode_transport = Quantity(type=str, description='''QP = QuantumPatch,
+                                                                        PAR = parametric,
                                                                         eaip = Electron Affinity/Ionozation
-                                                                        Potential, sig = sigma = 
+                                                                        Potential, sig = sigma =
                                                                         energy disorder,
-                                                                        l = lambda = reorganziation 
+                                                                        l = lambda = reorganziation
                                                                         energy.''')
     lf_exciton_preset = Quantity(type=str)
     lf_molecule_pdb = Quantity(type=str, description='name of file that provides data about the molecules.')
     lf_qp_output_sigma = Quantity(type=str)
     lf_qp_output_eaip = Quantity(type=str)
     lf_qp_output_lambda = Quantity(type=str)
-    lf_energies = Quantity(type=np.float64, shape=['*', 2], description='''2-by-x matrix. 1st value is 
+    lf_energies = Quantity(type=np.float64, shape=['*', 2], description='''2-by-x matrix. 1st value is
                                                                            HOMO in eV, 2nd one is
-                                                                           LUMO in eV. Check 
+                                                                           LUMO in eV. Check
                                                                            input_mode_transport to see
                                                                            which parameters are being
                                                                            referred here.''')
@@ -292,12 +292,12 @@ class Layer_molecule_species(MSection):
     m_def = Section(validate=False)
 
     molecule_species_material = Quantity(type=str, shape=['*'], description='''name of materials in this
-                                                                               layer, 
-                                                                            with materials defined in 
+                                                                               layer,
+                                                                            with materials defined in
                                                                     settings_materials.material_name.
                                                                     Order of materials corresponds to
                                                                     order of molecular_species_concentration''')
-    molecule_species_concentration = Quantity(type=np.float64, shape=['*'], description='''concentration of 
+    molecule_species_concentration = Quantity(type=np.float64, shape=['*'], description='''concentration of
                                                                                 material in layer,
                                                                                 max concentration is 1.
                                                                                 Order of concentrations
@@ -317,9 +317,9 @@ class Settings_electrodes(MSection):
     electrode_workfunction = Quantity(type=np.float64, description='''workfunction in eV. 1st repeating
                                                                       subsection is electrode attached
                                                                       before the first layer (which is
-                                                                      defined under 
-                                                                      settings.settings_layers) 
-                                                                      2nd electrode is attached after the 
+                                                                      defined under
+                                                                      settings.settings_layers)
+                                                                      2nd electrode is attached after the
                                                                       last layer.''')
     electrode_coupling_model = Quantity(type=str)
     electrode_wf_decay_length = Quantity(type=np.float64)
@@ -330,11 +330,11 @@ class Settings_qp_output_files(MSection):
     m_def = Section(validate=False)
 
     qp_output_files_name = Quantity(type=str, description='Name of QuantumPatch files used by this simulation run.')
-    qp_output_files_output_zip = Quantity(type=str)    
+    qp_output_files_output_zip = Quantity(type=str)
 
 class Settings(MSection):
     m_def = Section(validate=False)
-    
+
     lf_pbc = Quantity(type=str, description='periodic boundary conditions in xyz-direction')
     lf_excitonics = Quantity(type=str)
     connect_electrodes = Quantity(type=str)
@@ -351,18 +351,18 @@ class Settings(MSection):
     lf_measurement = Quantity(type=str)
     lf_temperature = Quantity(type=np.float64)
     lf_field_direction = Quantity(type=np.float64, shape=['*'])
-    lf_field_strength = Quantity(type=np.float64, shape=['*'], description='''array for applied electric 
+    lf_field_strength = Quantity(type=np.float64, shape=['*'], description='''array for applied electric
                                                                             fields in V/nm.''')
     lf_initial_holes = Quantity(type=int)
     lf_initial_electrons = Quantity(type=int)
     lf_iv_fluctuation = Quantity(type=np.float64, description='iv-fluctuation as convergence criterion.')
     lf_max_iterations = Quantity(type=int, description='max number of iterations as convergence criterion.')
-    
+
     lf_ti_prune = Quantity(type=str)
     lf_noise_damping = Quantity(type=str)
     lf_expansion_scheme = Quantity(type=str)
-    
-    
+
+
     qp_output_sigma = Quantity(type=str)
     qp_output_eaip = Quantity(type=str)
     lf_rates = Quantity(type=str)
@@ -376,7 +376,7 @@ class Settings(MSection):
     settings_qp_output_files = SubSection(sub_section=Settings_qp_output_files.m_def, repeats=True)
 class Run_lf_slr(MSection):
     m_def = Section(validate=False)
-    
+
     lf_nodes = Quantity(type=int, description='number of cumputing nodes used.')
     lf_ntasks = Quantity(type=int, description='number of CPUs used.')
     lf_mem_per_cpu = Quantity(type=np.float64, description='memory in MB used per CPU')
@@ -414,11 +414,11 @@ class Files_for_kmc(MSection):
                                                                       from COM.dat file in files_for_kmc
                                                                       folder''')
     lf_inner_idxs = Quantity(type=np.float64, shape=['*'], description='''contains all data from
-                                                                          inner_idxs.dat file 
+                                                                          inner_idxs.dat file
                                                                           in files_for_kmc folder''')
     lf_ip_ea = Quantity(type=np.float64, shape=[2, '*'], description='''2-by-x array, containing the data
-                                                                        from IP_EA.dat file in 
-                                                                        files_for_kmc''')                                                                  
+                                                                        from IP_EA.dat file in
+                                                                        files_for_kmc''')
     js_homo_mol_pairs = SubSection(sub_section=Js_homo_mol_pairs.m_def, repeats=False)
     sigma_mol_pairs = SubSection(sub_section=Sigma_mol_pairs.m_def, repeats=False)
     js_lumo_mol_pairs = SubSection(sub_section=Js_lumo_mol_pairs.m_def, repeats=False)
@@ -446,7 +446,7 @@ class LF_molecule_pdb_file(MSection):
 
 class LF_input(MSection):
     m_def = Section(validate=False)
-    
+
     settings = SubSection(sub_section=Settings.m_def, repeats=False)
     run_lf_slr = SubSection(sub_section=Run_lf_slr.m_def, repeats=False)
     molecule_pdb_file = SubSection(sub_section=LF_molecule_pdb_file.m_def, repeats=False)
@@ -457,7 +457,7 @@ class LF_add_info(MSection):
 
     lf_layer_id = Quantity(type=int, shape=['*'], description='''This repeating subsection corresponds to
                                                                 the number of add_info_x.yml files under
-                                                                lightforge_data.material_data. Each 
+                                                                lightforge_data.material_data. Each
                                                                 layer_id corresponds to one layer with
                                                                 its n_layer_sites, thicknesses etc.''')
     n_layer_sites = Quantity(type=int, shape=['*'])
@@ -467,7 +467,7 @@ class LF_add_info(MSection):
     add_info_x_boundaries = Quantity(type=np.float64, shape=['*', 2])
 class Material_data(MSection):
     m_def = Section(validate=False)
-    
+
     lf_add_info = SubSection(sub_section=LF_add_info.m_def, repeats=True)
 
 class LF_particle_positions(MSection):
@@ -491,12 +491,12 @@ class Runtime_data(MSection):
     lf_particle_positions = SubSection(sub_section=LF_particle_positions.m_def, repeats=True)
 class Lightforge_data(MSection):
     m_def = Section(validate=False)
-    
+
     material_data = SubSection(sub_section=Material_data.m_def, repeats=False)
     runtime_data = SubSection(sub_section=Runtime_data.m_def, repeats=False)
 class LightforgeCalculation(Calculation):
-    m_def = Section(validate=False, extends_base_section=True)    
-    
+    m_def = Section(validate=False, extends_base_section=True)
+
     lf_experiments = SubSection(sub_section=LF_experiments, repeats=False)
     lf_material = SubSection(sub_section=LF_material.m_def, repeats=False)
     lf_input = SubSection(sub_section=LF_input.m_def, repeats=False)

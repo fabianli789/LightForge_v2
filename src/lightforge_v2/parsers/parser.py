@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 #from nomad.parsing.file_parser import UnstructuredTextFileParser, Quantity
 #from nomad.datamodel.optimade import Species
 #from . import metainfo  # pylint: disable=unused-import
-#from nomad.datamodel.metainfo.simulation.run import Run                        
+#from nomad.datamodel.metainfo.simulation.run import Run
 #from nomad.datamodel.metainfo.simulation.calculation import Calculation
 #from nomad_simulations.schema_packages.general import Program, Simulation
 
@@ -39,24 +39,24 @@ from pathlib import Path
 from nomad.config import config
 from nomad.datamodel.metainfo.workflow import Workflow
 from nomad.parsing.parser import MatchingParser
-from runschema.run import Run, Program                                         
+from runschema.run import Run, Program
 from runschema.calculation import Calculation
 from lightforge_v2.schema_packages.schema_package import (
                             LightforgeCalculation, IV, IQE2, Current_density, Current_characteristics, LF_experiments, LF_material,
-                            LF_input, Settings, Settings_pair_input, Settings_materials, Settings_layers, 
-                            Layer_molecule_species, Settings_electrodes, Settings_hole_transfer_integrals, 
-                            Settings_electron_transfer_integrals, Settings_dexter_transfer_integrals, 
+                            LF_input, Settings, Settings_pair_input, Settings_materials, Settings_layers,
+                            Layer_molecule_species, Settings_electrodes, Settings_hole_transfer_integrals,
+                            Settings_electron_transfer_integrals, Settings_dexter_transfer_integrals,
                             Settings_qp_output_files, Run_lf_slr, Files_for_kmc, Js_homo_mol_pairs, Js_lumo_mol_pairs, Js_dexter_mol_pairs,
                             Sigma_mol_pairs, LF_molecule_pdb_file, LF_vacuum_lambda,
-                            LF_add_info, Material_data, Lightforge_data, Runtime_data, LF_experiment_inventory, 
-                            LF_particle_positions, Mobility, Particle_densities, 
-                            Charge_density_average, Exciton_decay_density_average, 
+                            LF_add_info, Material_data, Lightforge_data, Runtime_data, LF_experiment_inventory,
+                            LF_particle_positions, Mobility, Particle_densities,
+                            Charge_density_average, Exciton_decay_density_average,
                             Photon_creation_density_average,
                             Quenching_density_average, Exciton_molpairs, Emitter_emitter_transport_count,
                             Host_emitter_transport_count, Host_host_transport_count, Runtime_analysis,
                             Event_counts_by_type, Device_data, Electrodes, Energy_levels,
                             Exciton_separation, Foerster, Site_energies, Mol_types, Coordinates,
-                            Dexter_and_foerster, Foerster_expansion_errors) 
+                            Dexter_and_foerster, Foerster_expansion_errors)
 
 configuration = config.get_plugin_entry_point(
     'lightforge_v2.parsers:parser_entry_point'
@@ -66,31 +66,31 @@ configuration = config.get_plugin_entry_point(
 def DetailedParser(filepath, archive):
     run = Run()
     archive.run.append(run)
-    
+
     calculation = LightforgeCalculation()
     run.calculation.append(calculation)
-    
+
     lf_experiments = LF_experiments()
     calculation.lf_experiments = lf_experiments
-    
+
     lf_material = LF_material()
     calculation.lf_material = lf_material
-    
+
     current_characteristics = Current_characteristics()
     lf_experiments.current_characteristics = current_characteristics
-    
+
     particle_densities = Particle_densities()
     lf_experiments.particle_densities = particle_densities
-    
+
     iqe2 = IQE2()
     current_characteristics.IQE2 = iqe2
-    
+
     iv = IV()
     current_characteristics.IV = iv
-    
+
     lightforge_data = Lightforge_data()
     calculation.lightforge_data = lightforge_data
-    
+
     lf_input = LF_input()
     calculation.lf_input = lf_input
 
@@ -105,19 +105,19 @@ def DetailedParser(filepath, archive):
     coordinates_rows = [0]
 #    device_data_hasrun= False
 
-    for root, dirs, files in sorted(os.walk(filepath.parent)):        
+    for root, dirs, files in sorted(os.walk(filepath.parent)):
         natsort = lambda s: [int(t) if t.isdigit() else t.lower() for t in re.split('(\d+)', s)]
-        
+
         files = sorted(files, key = natsort)
         i = 0
         while i < len(files):
             if '.png' in files[i] or '.npz' in files[i] or '.zip' in files[i] or '.out' in files[i]:
                 files.remove(files[i])
             else:
-                i += 1    
-        for file in files:    
+                i += 1
+        for file in files:
             with open(root +'/'+ file, 'r') as f:
-                
+
                 if 'current_density' in file and 'all_data_points' not in root:
                     current_density = Current_density()
                     current_characteristics.current_density.append(current_density)
@@ -130,15 +130,15 @@ def DetailedParser(filepath, archive):
                 if 'IQE2_all_currents' in file and 'all_data_points' not in root:
                     for i, line in enumerate(f):
                         rows = i+1
-                    
+
                     a = np.zeros((rows,2))
                     iqe2.iqe2_all_currents = a
 
                     f.seek(0)
                     for i, line in enumerate(f):
-                        
+
                         parts = line.split()
-                        
+
                         iqe2.iqe2_all_currents[i][0] = parts[0]
                         iqe2.iqe2_all_currents[i][1] = parts[1]
                 if 'IQE2_all_fields' in file and 'all_data_points' not in root:
@@ -150,7 +150,7 @@ def DetailedParser(filepath, archive):
                     for i, line in enumerate(f):
                         parts = line.split()
                         iqe2.iqe2_all_fields[i][0] = parts[0]
-                        iqe2.iqe2_all_fields[i][1] = parts[1] 
+                        iqe2.iqe2_all_fields[i][1] = parts[1]
                 if re.search(r'^IV_all_fields.dat$', file) and 'all_data_points' not in root:
                     for i, line in enumerate(f):
                         rows = i + 1
@@ -159,10 +159,10 @@ def DetailedParser(filepath, archive):
                     f.seek(0)
                     for i, line in enumerate(f):
                         parts = line.split()
-                        
+
                         iv.iv_all_fields[i][0] = parts[0]
-                        iv.iv_all_fields[i][1] = parts[1]                 
-                        iv.iv_all_fields[i][2] = parts[2]                          
+                        iv.iv_all_fields[i][1] = parts[1]
+                        iv.iv_all_fields[i][2] = parts[2]
                 if re.search(r'mobilities_\d+', file) and 'all_data_points' not in root:
                     mobility = Mobility()
                     current_characteristics.mobility.append(mobility)
@@ -171,12 +171,12 @@ def DetailedParser(filepath, archive):
                         line=float(line)
                         value.append(line)
                     mobility.value = np.array(value)
-                
+
                 if re.search(r'mobilities_all_fields', file) and 'all_data_points' not in root:
                     mobility = Mobility()
                     current_characteristics.mobility.append(mobility)
                     for i, line in enumerate(f):
-                        rows  = i +1 
+                        rows  = i +1
                     d = np.zeros((rows, 3))
                     mobility.mobilities_all_fields = d
                     f.seek(0)
@@ -185,8 +185,8 @@ def DetailedParser(filepath, archive):
                         mobility.mobilities_all_fields[i][0] = parts[0]
                         mobility.mobilities_all_fields[i][1] = parts[1]
                         mobility.mobilities_all_fields[i][2] = parts[2]
-                
-                
+
+
                 if re.search(r'charge_density_average_\d+.dat', file) and 'all_data_points' not in root:
                     charge_density_average = Charge_density_average()
                     particle_densities.charge_density_average.append(charge_density_average)
@@ -202,33 +202,33 @@ def DetailedParser(filepath, archive):
                         if i==0:
                             parts = line.split()
                             device_length = parts
-                            
+
                         if i==1:
                             parts = line.split()
                             electrons = parts
-                            
+
                         if i==2:
                             parts = line.split()
                             holes = parts
                     value[0] = device_length
                     value[1] = electrons
-                    value[2] = holes  
+                    value[2] = holes
                     charge_density_average.value = value
-                
+
                 if re.search(r'exciton_decay_density_average_\d+', file)  and 'all_data_points'  not in root:
                     exciton_decay_density_average = Exciton_decay_density_average()
                     particle_densities.exciton_decay_density_average.append(exciton_decay_density_average)
                     file_exciton_decay_density_average =  yaml.safe_load(f)
-                                        
+
                     if 'CS' in file_exciton_decay_density_average['total']['annihilation']:
                         _cs = file_exciton_decay_density_average['total']['annihilation']['CS']
-                        exciton_decay_density_average.cs = _cs    
+                        exciton_decay_density_average.cs = _cs
                     if 'EET' in file_exciton_decay_density_average['total']['annihilation']:
                         _eet = file_exciton_decay_density_average['total']['annihilation']['EET']
                         exciton_decay_density_average.eet = _eet
                     if 'EPT' in file_exciton_decay_density_average['total']['annihilation']:
                         _ept = file_exciton_decay_density_average['total']['annihilation']['EPT']
-                        exciton_decay_density_average.ept = _ept                    
+                        exciton_decay_density_average.ept = _ept
                     if 'PTQ' in file_exciton_decay_density_average['total']['annihilation']:
                         _ptq = file_exciton_decay_density_average['total']['annihilation']['PTQ']
                         exciton_decay_density_average.ptq = _ptq
@@ -246,7 +246,7 @@ def DetailedParser(filepath, archive):
                         exciton_decay_density_average.tpq = _tpq
                     if 'TSA' in file_exciton_decay_density_average['total']['annihilation']:
                         _tsa = file_exciton_decay_density_average['total']['annihilation']['TSA']
-                        exciton_decay_density_average.tsa = _tsa 
+                        exciton_decay_density_average.tsa = _tsa
                     if 'TTA' in file_exciton_decay_density_average['total']['annihilation']:
                         _tta = file_exciton_decay_density_average['total']['annihilation']['TTA']
                         exciton_decay_density_average.tta = _tta
@@ -267,8 +267,8 @@ def DetailedParser(filepath, archive):
                         exciton_decay_density_average.recombination = _recombination
                     if 'x_axis' in file_exciton_decay_density_average:
                         _exciton_decay_density_average_x_axis = file_exciton_decay_density_average['x_axis']
-                        exciton_decay_density_average.exciton_decay_density_average_x_axis = _exciton_decay_density_average_x_axis    
-                
+                        exciton_decay_density_average.exciton_decay_density_average_x_axis = _exciton_decay_density_average_x_axis
+
                 if re.search(r'photon_creation_density_average_\d+', file) and 'all_data_points' not in root:
                     photon_creation_density_average = Photon_creation_density_average()
                     particle_densities.photon_creation_density_average.append(photon_creation_density_average)
@@ -294,7 +294,7 @@ def DetailedParser(filepath, archive):
                     value[1] = photons
                     value[2] = excitons
                     photon_creation_density_average.value = value
-                
+
                 if re.search(r'quenching_density_average_\d+', file) and 'all_data_points' not in root:
                     quenching_density_average = Quenching_density_average()
                     particle_densities.quenching_density_average.append(quenching_density_average)
@@ -320,18 +320,18 @@ def DetailedParser(filepath, archive):
                         if i == 3:
                             parts = line.split()
                             holes = parts
-                    value[0] = device_length     
+                    value[0] = device_length
                     value[1] = excitons_quenched
                     value[2] = electrons
-                    value[3] = holes 
+                    value[3] = holes
                     quenching_density_average.value = value
-                
+
                 if 'exciton_molpairs' in root:
                     if not exciton_molpairs_hasrun:
                         exciton_molpairs = Exciton_molpairs()
                         particle_densities.exciton_molpairs = exciton_molpairs
-                        exciton_molpairs_hasrun = True   
-                    
+                        exciton_molpairs_hasrun = True
+
                     if re.search(r'host_emitter_transport_count', file) and 'all_data_points' not in root:
                         host_emitter_transport_count = Host_emitter_transport_count()
                         exciton_molpairs.host_emitter_transport_count = host_emitter_transport_count
@@ -362,7 +362,7 @@ def DetailedParser(filepath, archive):
                             host_emitter_transport_count.foerster_t1t1 = _foerster_t1t1
                         if 'x_axis' in file_host_emitter_transport_count:
                             _x_axis = file_host_emitter_transport_count['x_axis']
-                            host_emitter_transport_count.x_axis = _x_axis                                         
+                            host_emitter_transport_count.x_axis = _x_axis
                     if re.search(r'emitter_emitter_transport_count.yml', file) and 'all_data_points' not in root:
                         emitter_emitter_transport_count = Emitter_emitter_transport_count()
                         exciton_molpairs.emitter_emitter_transport_count = emitter_emitter_transport_count
@@ -400,7 +400,7 @@ def DetailedParser(filepath, archive):
                         file_host_host_transport_count = yaml.safe_load(f)
                         if 'dexter_S1S1' in file_host_host_transport_count:
                             _dexter_s1s1 = file_host_host_transport_count['dexter_S1S1']
-                            host_host_transport_count.dexter_s1s1 = _dexter_s1s1 
+                            host_host_transport_count.dexter_s1s1 = _dexter_s1s1
                         if 'dexter_S1T1' in file_host_host_transport_count:
                             _dexter_s1t1 = file_host_host_transport_count['dexter_S1T1']
                             host_host_transport_count.dexter_s1t1 = _dexter_s1t1
@@ -425,10 +425,10 @@ def DetailedParser(filepath, archive):
                         if 'x_axis' in file_host_host_transport_count:
                             _x_axis = file_host_host_transport_count['x_axis']
                             host_host_transport_count.x_axis = _x_axis
-                
+
                 if 'runtime_analysis' in root:
-                    
-                    if not runtime_analysis_hasrun:    
+
+                    if not runtime_analysis_hasrun:
                         runtime_analysis = Runtime_analysis()
                         lf_experiments.runtime_analysis = runtime_analysis
                         runtime_analysis_hasrun = True
@@ -449,7 +449,7 @@ def DetailedParser(filepath, archive):
                                 event_counts_by_type.dexter_ept = float(parts[1])
                             if 'spq' in line:
                                 _spq.append(float(parts[1]))
-                                event_counts_by_type.spq = _spq       
+                                event_counts_by_type.spq = _spq
                             if 'sta' in line:
                                 _sta.append(float(parts[1]))
                                 event_counts_by_type.sta = _sta
@@ -496,30 +496,30 @@ def DetailedParser(filepath, archive):
                                 event_counts_by_type.spin_flip_exc = float(parts[1])
                             if 'thermal_decay' in line:
                                 event_counts_by_type.thermal_decay = float(parts[1])
-    
-                '''                                                                    # simulation folder "device_data" commented out due to its upload size 
+
+                '''                                                                    # simulation folder "device_data" commented out due to its upload size
                 if 'device_data' in root:
                     if not device_data_hasrun:
                         sec_device_data = sec_material.m_create(Device_data)
                         device_data_hasrun = True
-                    
+
                     if re.search(r'coord_\d+', file) and 'all_data_points' not in root:
                         sec_coordinates = sec_device_data.m_create(Coordinates)
-                        
-                        
+
+
                         for i, line in enumerate(f):
                             parts = line.split()
                             parts = [float(p) for p in parts]
                             _coordinates.append(parts)
-                        
-                        
+
+
                         if _coordinates[sum(coordinates_rows):] == _coordinates[sum(coordinates_rows) - coordinates_rows[-1]:sum(coordinates_rows)] and coordinates_counter >= 1:
                             sec_coordinates.text = 'This file has the same content as the previous file/previous repeating subsection.'
-                        else: 
+                        else:
                             sec_coordinates.coordinates = _coordinates[sum(coordinates_rows):]
                         coordinates_counter += 1
                         coordinates_rows.append(i+1)
-                    
+
                     if re.search(r'mol_types_\d+', file) and 'all_data_points' not in root:
                         sec_mol_types = sec_device_data.m_create(Mol_types)
                         _mol_types = []
@@ -527,7 +527,7 @@ def DetailedParser(filepath, archive):
                             line = float(line)
                             _mol_types.append(line)
                         sec_mol_types.mol_types = _mol_types
-                    
+
                     if re.search(r'site_energies_\d+', file) and 'all_data_points' not in root:
                         sec_site_energies = sec_device_data.m_create(Site_energies)
                         _site_energies = []
@@ -536,8 +536,8 @@ def DetailedParser(filepath, archive):
                             parts = [float(p) for p in parts]
                             _site_energies.append(parts)
                         sec_site_energies.site_energies = _site_energies
-                '''                                                                                                    
-                
+                '''
+
                 if 'Foerster' in root:
                     if not foerster_hasrun:
                         foerster = Foerster()
@@ -555,7 +555,7 @@ def DetailedParser(filepath, archive):
                         dexter_and_foerster.values = _values
                     if re.search(r'foerster_expansion_errors', file) and 'all_data_points' not in root:
                         foerster_expansion_errors = Foerster_expansion_errors()
-                        foerster.foerster_expansion_errors = foerster_expansion_errors                        
+                        foerster.foerster_expansion_errors = foerster_expansion_errors
                         for i, line in enumerate(f):
                             parts = line.split(': ')
                             if 'S1S1_0_0' in line:
@@ -589,8 +589,8 @@ def DetailedParser(filepath, archive):
                             if 'S1T1_1_1' in line:
                                 foerster_expansion_errors.s1t1_1_1 = float(parts[2])
                             if 'T1S1_1_1' in line:
-                                foerster_expansion_errors.t1s1_1_1 = float(parts[2]) 
-                
+                                foerster_expansion_errors.t1s1_1_1 = float(parts[2])
+
                 if 'material_data' in root:
                     if not material_data_hasrun:
                         material_data = Material_data()
@@ -601,7 +601,7 @@ def DetailedParser(filepath, archive):
                         material_data.lf_add_info.append(lf_add_info)
                         file_add_info = yaml.safe_load(f)
                         _length_layers = len(file_add_info['layers'])
-                        
+
                         _lf_layer_id = []
                         _n_layer_sites = []
                         _sites_end_idx_in_device = []
@@ -612,29 +612,29 @@ def DetailedParser(filepath, archive):
 
                             if 'layer_id' in file_add_info['layers'][i]:
                                 _lf_layer_id.append(int(file_add_info['layers'][i]['layer_id']))
-                                
+
                             if 'n_layer_sites' in file_add_info['layers'][i]:
                                 _n_layer_sites.append(int(file_add_info['layers'][i]['n_layer_sites']))
-                                 
+
                             if 'sites_end_idx_in_device' in file_add_info['layers'][i]:
                                 _sites_end_idx_in_device.append(file_add_info['layers'][i]['sites_end_idx_in_device'])
-                                 
+
                             if 'sites_start_idx_in_device' in file_add_info['layers'][i]:
                                 _sites_start_idx_in_device.append(file_add_info['layers'][i]['sites_start_idx_in_device'])
-                                 
+
                             if 'thickness' in file_add_info['layers'][0]:
                                 _add_info_thickness.append(file_add_info['layers'][i]['thickness'])
-                                 
+
                             if 'x_boundaries' in file_add_info['layers'][0]:
                                 _add_info_x_boundaries.append(file_add_info['layers'][i]['x_boundaries'])
-                                 
+
                         lf_add_info.lf_layer_id = _lf_layer_id
                         lf_add_info.n_layer_sites = _n_layer_sites
                         lf_add_info.sites_end_idx_in_device = _sites_end_idx_in_device
                         lf_add_info.sites_start_idx_in_device = _sites_start_idx_in_device
                         lf_add_info.add_info_thickness = _add_info_thickness
                         lf_add_info.add_info_x_boundaries = _add_info_x_boundaries
-                
+
                 if 'run_lf.slr' in file:
                     run_lf_slr = Run_lf_slr()
                     lf_input.run_lf_slr = run_lf_slr
@@ -648,7 +648,7 @@ def DetailedParser(filepath, archive):
                         if 'mem-per-cpu' in line:
                             parts = line.split('=')
                             run_lf_slr.lf_mem_per_cpu = float(parts[1])
-                
+
                 if 'settings' in file:
                     settings = Settings()
                     lf_input.settings = settings
@@ -690,7 +690,7 @@ def DetailedParser(filepath, archive):
                             continue
                         if re.search(r'\s+electrons:', line):
                             settings.particles_electrons = parts[1]
-                            continue                        
+                            continue
                         if re.search(r'\s+excitons:', line):
                             settings.particles_excitons = parts[1]
                             continue
@@ -708,7 +708,7 @@ def DetailedParser(filepath, archive):
                         if 'input_mode_transport' in line and materials_section == True:
                             _input_mode_transport = ''.join(parts[1:])
                             settings_materials.input_mode_transport = _input_mode_transport
-                            continue 
+                            continue
                         if 'exciton preset' in line and materials_section == True:
                             settings_materials.lf_exciton_preset = parts[1]
                             continue
@@ -730,7 +730,7 @@ def DetailedParser(filepath, archive):
                             continue
                         if re.search(r'\d+,\d+', line) and '-' in line and energies_section == True:
                             _lf_energies.append(line.replace('-', '').replace('[', '').replace(']', '').split(','))
-                            
+
                             for i, energies in enumerate(_lf_energies):
                                 for j, energy in enumerate(energies):
                                     _lf_energies[i][j] = float(energy)
@@ -743,7 +743,7 @@ def DetailedParser(filepath, archive):
                         if 'layers' in line:
                             layers_section = True
                             continue
-                        if 'thickness' in line and layers_section == True:    
+                        if 'thickness' in line and layers_section == True:
                             settings_layers = Settings_layers()
                             settings.settings_layers.append(settings_layers)
                             settings_layers.layer_thickness = float(parts[1])
@@ -758,18 +758,18 @@ def DetailedParser(filepath, archive):
                             _lf_molecule_species_material = []
                             _lf_molecule_species_concentration = []
                             continue
-                        if re.search(r'-\s*material', line) and molecule_species_section == True:    
+                        if re.search(r'-\s*material', line) and molecule_species_section == True:
                             _lf_molecule_species_material.append(parts[1])
                             layer_molecule_species.molecule_species_material = _lf_molecule_species_material
                             continue
                         if 'concentration' in line and molecule_species_section == True:
                             _lf_molecule_species_concentration.append(float(parts[1]))
                             layer_molecule_species.molecule_species_concentration = (
-                                _lf_molecule_species_concentration) 
+                                _lf_molecule_species_concentration)
                             continue
                         if (re.search(r'^\w', line) or re.search(r'^-', line) or len(parts)==1) and (
                                 molecule_species_section == True):
-                            
+
                             molecule_species_section = False
                         if re.search(r'\w', line) and layers_section == True:
                             layers_section = False
@@ -785,7 +785,7 @@ def DetailedParser(filepath, archive):
                         if re.search(r'^-', line) and electrodes_section == True:
                             settings_electrodes = Settings_electrodes()
                             settings.settings_electrodes.append(settings_electrodes)
-                        if 'electrode_workfunction' in line and electrodes_section == True:    
+                        if 'electrode_workfunction' in line and electrodes_section == True:
                             settings_electrodes.electrode_workfunction = float(parts[1])
                             continue
                         if 'coupling_model' in line and electrodes_section == True:
@@ -817,7 +817,7 @@ def DetailedParser(filepath, archive):
                         if 'hole_transfer_integrals' in line and pair_input_section == True:
                             settings_hole_transfer_integrals = Settings_hole_transfer_integrals()
                             settings_pair_input.settings_hole_transfer_integrals = settings_hole_transfer_integrals
-                            hole_transfer_integrals_section = True                            
+                            hole_transfer_integrals_section = True
                             continue
                         if 'wf_decay_length' in line and hole_transfer_integrals_section == True:
                             settings_hole_transfer_integrals.hole_transfer_integrals_wf_decay_length = float(parts[1])
@@ -826,13 +826,13 @@ def DetailedParser(filepath, archive):
                             settings_hole_transfer_integrals.hole_transfer_integrals_maximum_ti = float(parts[1])
                             continue
                         if ((re.search(r'electron', line) or re.search(r'dexter', line.lower()) or
-                            re.search(r'^-', line) or re.search(r'^\w', line)) and 
+                            re.search(r'^-', line) or re.search(r'^\w', line)) and
                             hole_transfer_integrals_section == True):
-                            hole_transfer_integrals_section = False  
+                            hole_transfer_integrals_section = False
                         if 'electron_transfer_integrals' in line and pair_input_section == True:
                             settings_electron_transfer_integrals = Settings_electron_transfer_integrals()
                             settings_pair_input.settings_electron_transfer_integrals = settings_electron_transfer_integrals
-                            electron_transfer_integrals_section = True                            
+                            electron_transfer_integrals_section = True
                             continue
                         if 'wf_decay_length' in line and electron_transfer_integrals_section == True:
                             settings_electron_transfer_integrals.electron_transfer_integrals_wf_decay_length = (
@@ -842,13 +842,13 @@ def DetailedParser(filepath, archive):
                             settings_electron_transfer_integrals.electron_transfer_integrals_maximum_ti = float(parts[1])
                             continue
                         if ((re.search(r'hole', line) or re.search(r'dexter', line.lower()) or
-                            re.search(r'^-', line) or re.search(r'^\w', line)) and 
+                            re.search(r'^-', line) or re.search(r'^\w', line)) and
                             electron_transfer_integrals_section == True):
                             electron_transfer_integrals_section = False
                         if 'dexter_transfer_integrals' in line.lower() and pair_input_section == True:
                             settings_dexter_transfer_integrals = Settings_dexter_transfer_integrals()
                             settings_pair_input.settings_dexter_transfer_integrals = settings_dexter_transfer_integrals
-                            dexter_transfer_integrals_section = True                            
+                            dexter_transfer_integrals_section = True
                             continue
                         if 'wf_decay_length' in line and dexter_transfer_integrals_section == True:
                             settings_dexter_transfer_integrals.dexter_transfer_integrals_wf_decay_length = float(parts[1])
@@ -857,7 +857,7 @@ def DetailedParser(filepath, archive):
                             settings_dexter_transfer_integrals.dexter_transfer_integrals_maximum_ti = float(parts[1])
                             continue
                         if ((re.search(r'hole', line) or re.search(r'electron', line.lower()) or
-                            re.search(r'^-', line) or re.search(r'^\w', line)) and 
+                            re.search(r'^-', line) or re.search(r'^\w', line)) and
                             dexter_transfer_integrals_section == True):
                             dexter_transfer_integrals_section = False
                         if re.search(r'^\w', line) and pair_input_section == True:
@@ -871,7 +871,7 @@ def DetailedParser(filepath, archive):
                         if 'temperature' in line.lower():
                             settings.lf_temperature = float(parts[1])
                             continue
-                        if 'field_direction' in line:                                                                       
+                        if 'field_direction' in line:
                             _lf_field_direction = parts[1].replace('[', '').replace(']', '').replace(',', '').split()
                             for i, field_dir in enumerate(_lf_field_direction):
                                 _lf_field_direction[i] = float(field_dir)
@@ -887,7 +887,7 @@ def DetailedParser(filepath, archive):
                             settings.lf_initial_holes = int(parts[1])
                             continue
                         if 'initial_electrons' in line:
-                            settings.lf_initial_electrons = int(parts[1])    
+                            settings.lf_initial_electrons = int(parts[1])
                             continue
                         if 'iv_fluctuation' in line:
                             settings.lf_iv_fluctuation = float(parts[1])
@@ -927,7 +927,7 @@ def DetailedParser(filepath, archive):
                         if 'epsilon_material' in line:
                             settings.lf_epsilon_material = float(parts[1])
                             continue
-                
+
                 if re.search(r'molecule.pdb', file):
                     molecule_pdb_file = LF_molecule_pdb_file()
                     lf_input.molecule_pdb_file = molecule_pdb_file
@@ -968,7 +968,7 @@ def DetailedParser(filepath, archive):
                     molecule_pdb_file.lf_molecule_pdb_temperature = _lf_molecule_pdb_temperature
                     molecule_pdb_file.lf_molecule_pdb_element = _lf_molecule_pdb_element
                     molecule_pdb_file.lf_molecule_pdb_charge = _lf_molecule_pdb_charge
-                
+
                 if 'files_for_kmc' in root:
                     if not files_for_kmc_hasrun:
                         files_for_kmc = Files_for_kmc()
@@ -999,7 +999,7 @@ def DetailedParser(filepath, archive):
                             _a = [float(x) for x in list(line.split())]
                             _js_homo_mol_pairs_value.append(_a)
                         js_homo_mol_pairs.js_homo_mol_pairs_value = _js_homo_mol_pairs_value
-                    
+
                     if re.search(r'js_lumo_mol_pairs_\d+', file.lower()):
                         js_lumo_mol_pairs = Js_lumo_mol_pairs()
                         files_for_kmc.js_lumo_mol_pairs = js_lumo_mol_pairs
@@ -1016,7 +1016,7 @@ def DetailedParser(filepath, archive):
                             _a = [float(x) for x in list(line.split())]
                             _js_dexter_mol_pairs_value.append(_a)
                         js_dexter_mol_pairs.js_dexter_mol_pairs_value = _js_dexter_mol_pairs_value
-                    
+
                     if re.search(r'sigma_mol_pairs_\d+', file.lower()):
                         sigma_mol_pairs = Sigma_mol_pairs()
                         files_for_kmc.sigma_mol_pairs = sigma_mol_pairs
@@ -1024,7 +1024,7 @@ def DetailedParser(filepath, archive):
                         for i, line in enumerate(f):
                             _sigma_mol_pairs_value.append(float(line))
                         sigma_mol_pairs.sigma_mol_pairs_value = _sigma_mol_pairs_value
-                
+
                 if 'vacuum_lambda' in root:                                           # only lambdas (for holes and electrons) are being parsed
                     vacuum_lambda = LF_vacuum_lambda()
                     lf_input.vacuum_lambda = vacuum_lambda
@@ -1032,11 +1032,11 @@ def DetailedParser(filepath, archive):
                         for i, line in enumerate(f):
                             if 'hole:' in line.lower():
                                 parts = line.split(':')
-                                vacuum_lambda.lf_vacuum_lambda_hole = float(parts[1]) 
+                                vacuum_lambda.lf_vacuum_lambda_hole = float(parts[1])
                             if 'electron:' in line.lower():
                                 parts = line.split(':')
                                 vacuum_lambda.lf_vacuum_lambda_electron = float(parts[1])
-                
+
                 if 'runtime_data' in root:
                     if not runtime_data_hasrun:
                         runtime_data = Runtime_data()
@@ -1093,19 +1093,19 @@ def DetailedParser(filepath, archive):
                         for i, line in enumerate(f):
                             parts = line.split()
                             _lf_particle_positions_value.append([float(x) for x in parts])
-                        lf_particle_positions.lf_particle_positions_value = _lf_particle_positions_value 
+                        lf_particle_positions.lf_particle_positions_value = _lf_particle_positions_value
 
 class NewParser(MatchingParser):
 
     def parse(
-        self, 
-        mainfile: str, 
+        self,
+        mainfile: str,
         archive: 'EntryArchive',
-        logger: 'BoundLogger', 
+        logger: 'BoundLogger',
         child_archives: dict[str, 'EntryArchive'] = None,
-    ) -> None: 
+    ) -> None:
         logger.info('NewParser.parse', parameter=configuration.parameter)
-        
+
         sec_program = archive.m_setdefault('run.program')
         sec_program.name = "Lightforge"
         sec_workflow = archive.m_setdefault('workflow')
