@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------------------------------------------------------
 #
-# This is a parser for Nanomatch GmbH's kMC software "Lightforge"
+# This is a parser for Nanomatch GmbH's kMC software "Lightforge".
 # Important: For this parser to work properly, make sure that the very last row in the Lightforge
 # settings file starts with any letter, in other words it must not start with space or with a dash.
 #
